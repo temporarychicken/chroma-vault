@@ -29,6 +29,7 @@ const form = document.querySelector("#console");
 const input = document.querySelector("#command");
 const inventory = document.querySelector("#inventory");
 const actionButton = document.querySelector("#action");
+const fontButton = document.querySelector('[data-command="font"]');
 const nearClip = .12;
 const firstCellDepth = 1.02;
 // Shapes use a 100-unit scale, with y = 0 at floor level.
@@ -82,6 +83,8 @@ const visited = new Set();
 const passages = new Map();
 const start = maze.join("").indexOf("S");
 let x, y, facing, escaped, puzzle, phase = 0;
+const gameFonts = ["BBC Micro", "Chroma Brick", "CPC ASCII"];
+let gameFont = gameFonts[0];
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
 
 function tile(tx, ty) {
@@ -118,7 +121,7 @@ function project(lateral, height, depth) {
 
 function centeredText(ctx, text, px, py, size, color) {
   ctx.fillStyle = color;
-  ctx.font = `bold ${size}px monospace`;
+  ctx.font = `${size}px "${gameFont}", monospace`;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   ctx.fillText(text, px, py);
@@ -132,7 +135,7 @@ function drawFixture(kind, lateral, depth) {
     polygon(view, [[px, py-size], [px+size*.68, py], [px, py+size], [px-size*.68, py]], colors.black);
     polygon(view, [[px, py-size*.8], [px+size*.55, py], [px, py+size*.8], [px+tip, py]], colors.blue);
     polygon(view, [[px, py-size*.8], [px-size*.55, py], [px, py+size*.8], [px+tip, py]], colors.cyan);
-    centeredText(view, "CHROMA VAULT", px, py + size * 1.55, Math.round(size * .34), colors.black);
+    centeredText(view, "CHROMA VAULT", px, py + size * 1.55, Math.round(size * .28), colors.black);
     return;
   }
   const [, floor] = project(lateral, .5, depth);
@@ -201,7 +204,7 @@ function drawView() {
     view.fillStyle = colors.black;
     view.fillRect(66, 88, 348, 88);
     centeredText(view, "VAULT OPEN", 240, 118, 30, colors.cyan);
-    centeredText(view, "TYPE RESTART TO PLAY AGAIN", 240, 150, 15, colors.yellow);
+    centeredText(view, "TYPE RESTART TO PLAY AGAIN", 240, 150, 12, colors.yellow);
   }
 }
 
@@ -351,8 +354,14 @@ function execute(raw) {
   const direction = directions[facing];
   if (!verb) return;
   if (verb === "RESTART") reset();
-  else if (verb === "HELP") {
-    status.textContent = "ARROWS TO MOVE. LOOK DESCRIBES YOUR SPOT. ACT USES WHAT IS THERE. RESTART STARTS OVER.";
+  else if (verb === "FONT") {
+    gameFont = gameFonts[(gameFonts.indexOf(gameFont) + 1) % gameFonts.length];
+    document.documentElement.style.setProperty("--game-font", `"${gameFont}"`);
+    fontButton.setAttribute("aria-label", `Cycle font. Current font is ${gameFont}.`);
+    status.textContent = `FONT ${gameFont.toUpperCase()}.`;
+    loadGameFont();
+  } else if (verb === "HELP") {
+    status.textContent = "ARROWS TO MOVE. TRY LOOK, ACT, FONT, OR RESTART.";
   } else if (escaped) status.textContent = "TYPE RESTART TO PLAY AGAIN.";
   else {
     switch (verb) {
@@ -400,6 +409,10 @@ window.addEventListener("keydown", event => {
 reset();
 visited.add(`${x},${y}`);
 render();
+function loadGameFont() {
+  document.fonts.load(`12px "${gameFont}"`).then(render, () => {});
+}
+loadGameFont();
 function animate(time) {
   if (!reducedMotion.matches && !escaped) {
     phase = time / 600;

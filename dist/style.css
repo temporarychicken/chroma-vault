@@ -2,7 +2,7 @@
   color-scheme: dark;
   background: #050406;
   color: #fff600;
-  font-family: "Lucida Console", "Courier New", monospace;
+  font-family: var(--game-font, "BBC Micro"), "Lucida Console", "Courier New", monospace;
 }
 * { box-sizing: border-box; }
 body {
@@ -19,7 +19,6 @@ main {
   gap: .45em 1em;
   container-type: inline-size;
   font-size: clamp(12px, 3vw, 32px);
-  font-weight: bold;
 }
 canvas { display: block; width: 100%; image-rendering: pixelated; }
 #view {
@@ -30,11 +29,10 @@ canvas { display: block; width: 100%; image-rendering: pixelated; }
 #heading {
   grid-column: 1 / -1;
   text-align: center;
-  letter-spacing: .12em;
-  font-size: clamp(13px, 3.5cqw, 38px);
+  font-size: clamp(13px, 3cqw, 34px);
 }
 #map { border: 2px solid #7771ff; }
-.console { font-size: clamp(12px, 2.7cqw, 28px); }
+.console { font-size: clamp(12px, 2.55cqw, 27px); overflow-wrap: anywhere; }
 form { display: flex; gap: .65em; align-items: baseline; }
 input, button { font: inherit; color: inherit; }
 input {
@@ -50,7 +48,7 @@ input {
   min-height: 3.5em;
   margin-top: .55em;
   color: #e5deff;
-  font-size: clamp(12px, 2.15cqw, 23px);
+  font-size: clamp(12px, 1.85cqw, 21px);
   line-height: 1.2;
 }
 nav { display: flex; flex-wrap: wrap; gap: .35em; }
