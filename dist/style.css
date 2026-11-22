@@ -1,0 +1,71 @@
+:root {
+  color-scheme: dark;
+  background: #050406;
+  color: #fff600;
+  font-family: "Lucida Console", "Courier New", monospace;
+}
+* { box-sizing: border-box; }
+body {
+  min-height: 100svh;
+  margin: 0;
+  display: grid;
+  place-items: center;
+}
+main {
+  width: min(98vw, 121svh, 1280px);
+  padding: 1%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 19%;
+  gap: .45em 1em;
+  container-type: inline-size;
+  font-size: clamp(12px, 3vw, 32px);
+  font-weight: bold;
+}
+canvas { display: block; width: 100%; image-rendering: pixelated; }
+#view {
+  grid-column: 1 / -1;
+  border: 2px solid #7771ff;
+  box-shadow: 0 0 5px #615cff80;
+}
+#heading {
+  grid-column: 1 / -1;
+  text-align: center;
+  letter-spacing: .12em;
+  font-size: clamp(13px, 3.5cqw, 38px);
+}
+#map { border: 2px solid #7771ff; }
+.console { font-size: clamp(12px, 2.7cqw, 28px); }
+form { display: flex; gap: .65em; align-items: baseline; }
+input, button { font: inherit; color: inherit; }
+input {
+  min-width: 0;
+  flex: 1;
+  text-transform: uppercase;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #7771ff;
+  border-radius: 0;
+}
+#status {
+  min-height: 3.5em;
+  margin-top: .55em;
+  color: #e5deff;
+  font-size: clamp(12px, 2.15cqw, 23px);
+  line-height: 1.2;
+}
+nav { display: flex; flex-wrap: wrap; gap: .35em; }
+#inventory {
+  margin-bottom: .45em;
+  color: #23fff1;
+  font-size: clamp(12px, 1.8cqw, 20px);
+}
+button {
+  padding: .2em .45em;
+  background: #0e0b17;
+  border: 1px solid #7771ff;
+  cursor: pointer;
+  font-size: clamp(12px, 1.8cqw, 20px);
+}
+button:hover { background: #292060; }
+button:disabled { opacity: .45; cursor: default; }
+:focus-visible { outline: 2px solid #fff600; outline-offset: 2px; }

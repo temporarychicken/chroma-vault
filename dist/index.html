@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chroma Vault</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="game.js" defer></script>
+</head>
+<body>
+  <main aria-label="Chroma Vault maze game">
+    <canvas id="view" width="480" height="264" aria-label="First-person maze view"></canvas>
+    <div id="heading">LOOKING EAST</div>
+    <section class="console" aria-label="Game console">
+      <form id="console">
+        <label for="command">COMMAND&gt;</label>
+        <input id="command" maxlength="48" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go">
+      </form>
+      <div id="status" role="status"></div>
+      <div id="inventory"></div>
+      <nav aria-label="Maze controls">
+        <button type="button" data-command="left">TURN L</button>
+        <button type="button" data-command="forward">STEP</button>
+        <button type="button" data-command="right">TURN R</button>
+        <button id="action" type="button" data-command="act">ACT</button>
+        <button type="button" data-command="help">HELP</button>
+      </nav>
+    </section>
+    <canvas id="map" width="96" height="96" aria-label="North-up map of discovered passages"></canvas>
+  </main>
+</body>
+</html>
