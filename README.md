@@ -1,5 +1,7 @@
 # Chroma Vault
 
+Current release **2.0.0**
+
 Chroma Vault is an original browser maze inspired by the bold colours and command-driven adventures of the BBC Micro era.
 
 Open [dist/index.html](dist/index.html) in a browser to play. The game runs locally without a server or dependencies.
