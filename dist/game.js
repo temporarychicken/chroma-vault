@@ -32,111 +32,53 @@ const actionButton = document.querySelector("#action");
 const fontButton = document.querySelector('[data-command="font"]');
 const nearClip = .12;
 const firstCellDepth = 1.02;
-// Transparent pixels are dots. The eight ink colours mirror the Model B palette.
-const spriteInk = {
-  k: "#000000", r: "#ff0000", g: "#00ff00", y: "#ffff00",
-  b: "#0000ff", m: "#ff00ff", c: "#00ffff", w: "#ffffff",
+// Shapes use a 100-unit scale, with y = 0 at floor level.
+const figures = {
+  B: [
+    ["#e9ffff", [[-32,-41],[-31,-57],[-20,-72],[0,-78],[20,-72],[31,-57],[32,-41],[26,-41],[25,-55],[16,-66],[0,-71],[-16,-66],[-25,-55],[-26,-41]]],
+    ["#e5a900", [[-38,-44],[38,-44],[28,-9],[19,-2],[-19,-2],[-28,-9]]],
+    ["#fff600", [[-33,-42],[13,-39],[12,-4],[-19,-4],[-26,-10]]],
+    ["#fff992", [[-38,-44],[-28,-51],[0,-55],[27,-51],[38,-44],[27,-37],[0,-33],[-27,-37]]],
+    ["#352549", [[-28,-44],[-18,-48],[0,-50],[18,-48],[28,-44],[18,-40],[0,-38],[-18,-40]]],
+  ],
+  I: [
+    ["#23fff1", [[-38,-49],[13,-42],[13,0],[-38,-8]]],
+    ["#5395ff", [[13,-42],[40,-57],[40,-16],[13,0]]],
+    ["#bcffff", [[-38,-49],[-12,-66],[40,-57],[13,-42]]],
+    ["#ffffff", [[-28,-50],[-11,-60],[15,-56],[-9,-48]]],
+    ["#9fffff", [[-29,-41],[-23,-40],[-23,-17],[-29,-18]]],
+    ["#d2ffff", [[15,-35],[35,-48],[35,-43],[15,-30]]],
+  ],
+  D: [
+    ["#137b53", [[-20,-58],[-61,-87],[-50,-58],[-69,-57],[-47,-42],[-58,-31],[-21,-39]]],
+    ["#158654", [[-16,-13],[-48,-19],[-68,-32],[-80,-50],[-78,-28],[-63,-13],[-34,-6]]],
+    ["#35ec62", [[-47,-24],[-48,-44],[-36,-60],[-13,-61],[3,-50],[12,-62],[15,-84],[29,-97],[44,-96],[53,-84],[74,-83],[77,-74],[69,-63],[43,-63],[38,-36],[23,-17],[14,-14],[20,-4],[0,0],[-8,-8],[-7,-20],[-24,-21],[-32,-7],[-51,-7],[-41,-16]]],
+    ["#b9ff57", [[45,-63],[38,-36],[23,-17],[0,-15],[14,-29],[24,-52],[28,-69]]],
+    ["#f8ffcf", [[28,-96],[28,-109],[38,-96]]],
+    ["#10151d", [[42,-88],[49,-87],[48,-83],[42,-83]]],
+    ["#10151d", [[53,-72],[75,-75],[73,-71],[55,-68]]],
+  ],
+  T: [
+    ["#dd8c35", [[-15,0],[15,0],[9,-24],[9,-51],[16,-84],[5,-95],[-4,-73],[-8,-46],[-7,-18]]],
+    ["#ffce57", [[-7,-7],[1,-4],[-1,-46],[5,-75],[10,-88],[5,-90],[-4,-68],[-7,-46]]],
+    ["#168c49", [[9,-91],[-22,-114],[-51,-112],[-69,-90],[-43,-100],[-25,-97],[0,-79],[24,-82],[49,-94],[68,-84],[58,-104],[33,-108]]],
+    ["#4cff35", [[9,-91],[-13,-116],[-35,-128],[-56,-124],[-32,-117],[-18,-98],[-39,-95],[-55,-74],[-32,-83],[-15,-82],[9,-94],[23,-113],[48,-122],[63,-114],[39,-113],[25,-91],[47,-85],[64,-63],[40,-75],[25,-75]]],
+  ],
+  E: [
+    ["#39306b", [[-43,-67],[-58,-42],[-59,-9],[-45,-2],[-29,-10],[-30,-34],[-15,-59],[15,-62],[28,-42],[32,-9],[47,-1],[59,-12],[56,-47],[43,-73],[24,-88],[-25,-88]]],
+    ["#8151d8", [[-44,-70],[-28,-86],[-21,-92],[-22,-106],[-12,-121],[9,-124],[24,-112],[26,-91],[41,-75],[46,-58],[33,-50],[28,-26],[28,-5],[12,0],[-2,-5],[-4,-25],[-19,-18],[-23,-4],[-43,0],[-44,-12],[-34,-29],[-38,-48],[-48,-53]]],
+    ["#b089ef", [[-25,-72],[-9,-82],[12,-81],[29,-70],[25,-52],[15,-44],[-12,-44],[-27,-54]]],
+    ["#c3a4fb", [[-17,-108],[-8,-112],[14,-112],[21,-103],[18,-90],[9,-85],[-9,-86],[-18,-94]]],
+    ["#231837", [[-16,-107],[-3,-108],[0,-104],[-13,-103]]],
+    ["#231837", [[4,-104],[8,-108],[19,-107],[18,-103]]],
+    ["#4b3477", [[-8,-99],[11,-99],[15,-93],[10,-88],[-8,-89],[-12,-94]]],
+    ["#201632", [[-5,-96],[8,-96],[7,-93],[-4,-93]]],
+  ],
 };
-const sprites = {
-  B: { height: .72, rows: [
-    "....wwww....",
-    "...w....w...",
-    "..w......w..",
-    "..w......w..",
-    ".yyyyyyyyyy.",
-    ".ykkkkkkkky.",
-    "..yyyyyyyy..",
-    "..yyyyyyyy..",
-    "..yyyyyyyy..",
-    "...yyyyyy...",
-    "...yyyyyy...",
-    "....yyyy....",
-  ] },
-  I: { height: .66, rows: [
-    "..cccccccc..",
-    ".cwwccccccc.",
-    "cwwccccccccc",
-    "cwcccccccccc",
-    "cccccccbcccc",
-    "ccccccbbcccc",
-    "cccccbcccccc",
-    "cccccccccccc",
-    ".cccccccccc.",
-  ] },
-  D: { height: 1.06, rows: [
-    ".............w......",
-    "............ggg.....",
-    "....gg.....ggwgg....",
-    "...gggg....gggggggg.",
-    "..gggggg...gggkkgg..",
-    "..ggggggg..ggg..r.rr",
-    "...ggggggggggg...r..",
-    "....gggggggggy......",
-    ".g...ggggggggy......",
-    "g...ggggggggg.......",
-    "gggggggggggg........",
-    ".gggggg..gg.........",
-    ".....gg..gg.........",
-    "....ggg..ggg........",
-  ] },
-  T: { height: 1.22, rows: [
-    "....gg......gg....",
-    "..gggggg..gggggg..",
-    ".ggg..gggggg..ggg.",
-    "gg...gggggggg...gg",
-    "....ggg.gg.ggg....",
-    "...gg...yy...gg...",
-    "..g.....yy.....g..",
-    "........yy........",
-    ".......yy.........",
-    ".......yy.........",
-    ".......yy.........",
-    "......yy..........",
-    "......yy..........",
-    ".....yyyy.........",
-  ] },
-  E: { height: 1.58, rows: [
-    "......mmmm......",
-    ".....mmmmmm.....",
-    ".....mkmkmm.....",
-    ".....mmkkmm.....",
-    "....mmmmmmmm....",
-    "..mmmmmmmmmmmm..",
-    ".mmmmmmmmmmmmmm.",
-    "mmmmmmmmmmmmmmmm",
-    "mmm.mmmmmmmm.mmm",
-    "mmm..mmmmmm..mmm",
-    "mmm..mmmmmm..mmm",
-    "mmmm.mmmmmmm.mmm",
-    ".....mmm.mmm....",
-    ".....mmm.mmm....",
-    "....mmmm.mmmm...",
-  ] },
-  O: { height: 1.0, rows: [
-    "......cc......",
-    ".....cccc.....",
-    "....cccccc....",
-    "...cccccccc...",
-    "..cccccccccc..",
-    ".cccccccccccc.",
-    "ccccccwwcccccc",
-    ".cccccccccccc.",
-    "..cccccccccc..",
-    "...cccccccc...",
-    "....cccccc....",
-    ".....cccc.....",
-    "......cc......",
-  ] },
-};
-const ripePalm = {
-  ...sprites.T,
-  rows: sprites.T.rows.map((row, i) => ({
-    4: "....ggg.ggyggg....",
-    5: "...gg...yyyy.gg...",
-    6: "..g.....yy.yy..g..",
-    7: "........yy.y......",
-  })[i] ?? row),
-};
+const bananaBunch = [
+  ["#fff600", [[6,-89],[9,-73],[17,-65],[29,-67],[34,-74],[26,-72],[19,-74],[16,-83],[15,-91]]],
+  ["#ffc129", [[13,-89],[19,-76],[28,-72],[39,-76],[42,-83],[33,-79],[26,-81],[22,-91]]],
+];
 const visited = new Set();
 const passages = new Map();
 const start = maze.join("").indexOf("S");
@@ -187,33 +129,27 @@ function centeredText(ctx, text, px, py, size, color) {
 
 function drawFixture(kind, lateral, depth) {
   const [px, py] = project(lateral, 0, depth);
-  const [, floor] = project(lateral, .5, depth);
   const size = 120 * .8 / depth;
+  if (kind === "O") {
+    const tip = Math.round(Math.sin(phase) * size * .25);
+    polygon(view, [[px, py-size], [px+size*.68, py], [px, py+size], [px-size*.68, py]], colors.black);
+    polygon(view, [[px, py-size*.8], [px+size*.55, py], [px, py+size*.8], [px+tip, py]], colors.blue);
+    polygon(view, [[px, py-size*.8], [px-size*.55, py], [px, py+size*.8], [px+tip, py]], colors.cyan);
+    centeredText(view, "CHROMA VAULT", px, py + size * 1.55, Math.round(size * .28), colors.black);
+    return;
+  }
+  const [, floor] = project(lateral, .5, depth);
   if (kind === "E" && puzzle.fed) {
     centeredText(view, "EXIT OPEN", px, py, Math.max(6, Math.round(size * .22)), colors.yellow);
     return;
   }
-  const sprite = kind === "T" && puzzle.grown && !puzzle.picked ? ripePalm : sprites[kind];
-  const scale = size * sprite.height / sprite.rows.length;
-  const width = sprite.rows[0].length;
-  const left = px - width * scale / 2;
-  const top = (kind === "O" ? py + size * .45 : floor) - scale * sprite.rows.length;
-  const beaconInk = Math.floor(phase) % 2 ? spriteInk.y : spriteInk.w;
-
-  for (const [rowIndex, row] of sprite.rows.entries()) {
-    const y0 = Math.round(top + rowIndex * scale);
-    const y1 = Math.round(top + (rowIndex + 1) * scale);
-    for (let column = 0; column < width; column++) {
-      const pixel = row[column];
-      if (pixel === ".") continue;
-      const x0 = Math.round(left + column * scale);
-      const x1 = Math.round(left + (column + 1) * scale);
-      view.fillStyle = kind === "O" && pixel === "w" ? beaconInk : spriteInk[pixel];
-      view.fillRect(x0, y0, x1 - x0, y1 - y0);
-    }
-  }
-  if (kind === "O") {
-    centeredText(view, "CHROMA VAULT", px, py + size * 1.08, Math.round(size * .28), colors.black);
+  const scale = size / (kind === "E" ? 76 : 100);
+  const parts = kind === "T" && puzzle.grown && !puzzle.picked
+    ? [...figures.T, ...bananaBunch] : figures[kind];
+  for (const [color, points] of parts) {
+    polygon(view, points.map(([x, y]) => [
+      Math.round(px + x * scale), Math.round(floor + y * scale),
+    ]), color);
   }
 }
 
@@ -258,7 +194,7 @@ function drawView() {
         polygon(view, [rightTop, project(rightEdge, -.5, near), nearRight, rightBottom], colors.yellow);
       }
       const feature = tile(tx, ty);
-      if (Object.hasOwn(sprites, feature) && feature !== "O" && !(feature === "B" && puzzle.bucket)
+      if (Object.hasOwn(figures, feature) && !(feature === "B" && puzzle.bucket)
         && !(feature === "I" && puzzle.iceTaken)) {
         drawFixture(feature, column, far - (row === 0 ? .02 : .35));
       }
