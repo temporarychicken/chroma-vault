@@ -1,6 +1,6 @@
 # Chroma Vault
 
-Current release **3.0.0**
+Current release **4.0.0**
 
 Chroma Vault is an original browser maze inspired by the bold colours and command-driven adventures of the BBC Micro era.
 
@@ -12,7 +12,7 @@ Open [dist/index.html](dist/index.html) in a browser to play. The game runs loca
 - Type `RESTART` to start over.
 - Use **FONT** to cycle through BBC Micro capitals, the wide-pixel Chroma Brick font, and CPC ASCII. The game starts with BBC Micro capitals.
 
-A hungry gorilla guards the exit. Somewhere in the maze are a dragon, a thirsty palm, an ice block, and an empty bucket.
+A hungry gorilla guards the exit. Somewhere in the maze are a dragon, a thirsty palm, an ice block, and an empty bucket. The objects are flat bitmap sprites drawn with the BBC Micro Model B's eight basic colours.
 
 The CPC font option rebuilds printable ASCII as fixed-width glyphs sampled from [Amstrad CPC extended](https://fontstruct.com/fontstructions/show/25590/amstrad_cpc_extended) by ruboku (2008), licensed under [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/).
 
